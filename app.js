@@ -2,8 +2,8 @@
 let a = '';
 let b = '';
 let op = '';
-let result = '';
-let displayValue = '_ _ _';
+let result = 0;
+
 
 // Selections
 const display = document.querySelector('.display');
@@ -27,7 +27,7 @@ const multiply = (a,b)=>{
 };
 //division
 const divide = (a,b)=>{
-    return b==0 ? alert('You can not divide by zero!') : a/b;
+    return a/b;
 }
 
 
@@ -38,53 +38,59 @@ const operate = (a,b,operator)=>{
 };
 
 
-// Populate the display with the buttons pressed eg: 1 + 2 
+// Populate the display with the buttons pressed 
 // Save first value as 'a', save operator chosen, and save second value as 'b'
     // Digit Functionality
 digits.forEach(digit=>{
     digit.addEventListener('click', ()=>{
+        view('');
         if(!op){
             a += digit.textContent;
-            displayValue = a;
+            view(a);
         } else{
             b += digit.textContent;
-            displayValue = b;
+            result = parseFloat(operate(Number(a),Number(b),select(op)).toFixed(2));
+            a = result;
+            view(b);
         }
-        view(displayValue);
     });
 });
+
+
     // Operation Functionality
 operators.forEach(operator =>{
     operator.addEventListener('click', ()=>{
+        view(checkInfinity(result)); 
         op = operator.textContent;
-        if(!b == ''){
-            result = operate(Number(a),Number(b),select(op));
-            a = result;
-            displayValue = a;
-            b = ''
+        if(!a){
+            op = '';
+        }else{
+            if(!b == ''){
+                b = ''
+                view(result);
+            }else{
+                result = a;
+                view(result);
+            }
         }
-        view(displayValue);
     })
 })
 
     // Equal Func
-equal.addEventListener('click', ()=>{
-    result = operate(Number(a),Number(b),select(op));
-    displayValue = result;
-    view(result)
-    a = result;
-    b = '';
-    result = '';  
+equal.addEventListener('click', ()=>{ 
+    if(!a){
+        view(0);
+    }
+    view(checkInfinity(result));   
 })
 
     // Clear Functionality
 clear.addEventListener('click', ()=>{
-    displayValue = '_ _ _';
     a = '';
     b = '';
     op = '';
     result = '';
-    view(displayValue);
+    view(0);
 })
 
 
@@ -100,5 +106,17 @@ const select = (op)=>{
     return op == '+' ? add
           :op == '-' ? substract
           :op == '*' ? multiply
-          :op == '/' ? divide : '';
+          :op == '/' ? divide : add;
 };
+
+
+    // Check for inifity
+const checkInfinity = (result)=>{
+    if (result == 'Infinity'){
+        a=''
+        b=''
+        return 'Not Possible'
+
+    }
+    return result
+}
