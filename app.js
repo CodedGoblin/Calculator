@@ -13,7 +13,7 @@ const operators = document.querySelectorAll('.operator');
 const equal = document.querySelector('#equal');
 const clear = document.querySelector('#clear');
 const decimal = document.querySelector('#decimal');
-
+const del = document.querySelector('#delete');
 
 // addition
 const add = (a,b)=>{
@@ -100,6 +100,35 @@ clear.addEventListener('click', ()=>{
     result = '';
     view(a)
 })
+
+
+    // Backspace Functionality
+del.addEventListener('click', ()=>{
+    let arr = [];
+    if(op == ''){
+        arr = Array.from(a.toString());
+        if(arr.length == 0){
+            a = 0;
+            view(a);
+        }else{
+            arr.pop();
+            a = arr.join('');
+            view(a);
+        }
+    }else{
+        arr = Array.from(b.toString());
+        if(arr.length == 0){
+            b = 0;
+            view(b);
+        }else{
+            arr.pop();
+            b = arr.join('');
+            view(b);
+        }
+    }
+})
+
+
 
 
 
