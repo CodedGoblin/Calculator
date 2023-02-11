@@ -69,19 +69,18 @@ digits.forEach(digit=>{
 operators.forEach(operator =>{
     operator.addEventListener('click', ()=>{
        op = operator.textContent;
-       if(!b==''){
+       if(!b === ''){
         result = parseFloat(operate(a,b,select(op)).toFixed(2));
         view(checkInfinity(result));
         a = result;
         b = '';
-        op = '';
        }
     })
 })
 
     // Equal Func
 equal.addEventListener('click', ()=>{ 
-    if(b == ''){ // safety in case the equal is pressed before op and b are assigned
+    if(b === '' ){ // safety in case the equal is pressed before op and b are assigned
         view(a)
     }else{
         result = parseFloat(operate(a,b,select(op)).toFixed(2));
@@ -107,24 +106,20 @@ del.addEventListener('click', ()=>{
     let arr = [];
     if(op == ''){
         arr = Array.from(a.toString());
+        arr.pop();
+        a = arr.join('');
         if(arr.length == 0){
             a = 0;
-            view(a);
-        }else{
-            arr.pop();
-            a = arr.join('');
-            view(a);
         }
+        view(a);
     }else{
         arr = Array.from(b.toString());
+        arr.pop();
+        b = arr.join('');
         if(arr.length == 0){
             b = 0;
-            view(b);
-        }else{
-            arr.pop();
-            b = arr.join('');
-            view(b);
         }
+        view(b);
     }
 })
 
