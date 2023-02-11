@@ -1,12 +1,14 @@
-// global Variables
+/////////// global Variables /////////////////////////////
 let a = 0;
 let b = '';
 let op = '';
 let result = 0;
+/////////////////////////////////////////////////////////////
 
 
 
-// Selections
+
+////////// Selections ///////////////////////////////////////
 const display = document.querySelector('.display');
 const digits = document.querySelectorAll('.digit');
 const operators = document.querySelectorAll('.operator');
@@ -14,7 +16,10 @@ const equal = document.querySelector('#equal');
 const clear = document.querySelector('#clear');
 const decimal = document.querySelector('#decimal');
 const del = document.querySelector('#delete');
+////////////////////////////////////////////////////////////
 
+
+//// Math ///////////////////////////////////////////////////////
 // addition
 const add = (a,b)=>{
     return a+b;
@@ -37,21 +42,23 @@ const divide = (a,b)=>{
 const operate = (a,b,operator)=>{
     return operator(Number(a),Number(b));
 };
+///////////////////////////////////////////////////////////////////
 
 
-
-
-
+//////// Functionality //////////////////////////////////////////////
+const insertDigit = (source)=>{
+    if(!op == ''){
+        b += source;
+        view(b);
+    }else{
+        a += source;
+        view(a);
+    }        
+};
     // Digit Functionality
 digits.forEach(digit=>{
     digit.addEventListener('click', ()=>{
-        if(!op == ''){
-            b += digit.textContent;
-            view(b)
-        }else{
-            a += digit.textContent;
-            view(a)
-        }         
+         insertDigit(digit.textContent);
     });
 });
 
@@ -66,20 +73,23 @@ digits.forEach(digit=>{
 
 
     // Operation Functionality
+const insertOperator = (source)=>{
+    op = source;
+    if(!b.length == 0){
+     result = parseFloat(operate(a,b,select(op)).toFixed(2));
+     view(checkInfinity(result));
+     a = result;
+     b = '';
+    }
+};
 operators.forEach(operator =>{
     operator.addEventListener('click', ()=>{
-       op = operator.textContent;
-       if(!b === ''){
-        result = parseFloat(operate(a,b,select(op)).toFixed(2));
-        view(checkInfinity(result));
-        a = result;
-        b = '';
-       }
+      insertOperator(operator.textContent);
     })
-})
+});
 
     // Equal Func
-equal.addEventListener('click', ()=>{ 
+const getResult = ()=>{
     if(b === '' ){ // safety in case the equal is pressed before op and b are assigned
         view(a)
     }else{
@@ -89,20 +99,26 @@ equal.addEventListener('click', ()=>{
         b = '';
         op = '';  
     }
-})
+};
+equal.addEventListener('click', ()=>{ 
+   getResult();
+});
 
     // Clear Functionality
-clear.addEventListener('click', ()=>{
+const reset = ()=>{
     a = 0;
     b = '';
     op = '';
     result = '';
-    view(a)
-})
+    view(a);
+};
+clear.addEventListener('click', ()=>{
+    reset();
+});
 
 
     // Backspace Functionality
-del.addEventListener('click', ()=>{
+const backspace = ()=>{
     let arr = [];
     if(op == ''){
         arr = Array.from(a.toString());
@@ -121,13 +137,49 @@ del.addEventListener('click', ()=>{
         }
         view(b);
     }
+};
+del.addEventListener('click', ()=>{
+    backspace();
+});
+
+// check dot
+const insertDot = ()=>{
+    if(!a.toString().includes('.')){
+        a+='.'; 
+        view(a);
+    } 
+    if(!op == '' && !b.includes('.')){
+        b+='.';
+        view(b);
+    } 
+}
+decimal.addEventListener('click', ()=>{
+    insertDot();
 })
 
+ // Keyboard Functionality
+const digitArray = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+const operatorArray = ['+', '-', '*', '/'];
+
+document.body.addEventListener('keydown', (evt)=>{
+    if(digitArray.includes(evt.key)){
+        insertDigit(evt.key);
+    };
+    if(operatorArray.includes(evt.key)){
+        evt.preventDefault();
+        insertOperator(evt.key);
+    };
+    if(evt.key == ".") insertDot();
+    if(evt.key == "Backspace") backspace();
+    if(evt.key == "Delete") reset();
+    if(evt.key == "Enter") getResult();
+});
+//////////////////////////////////////////////////////////////////////////////////
 
 
 
 
-// Utility functions
+/////////////////// Utility functions ///////////////////////////////////////////////
     // Display Functionality
 const view = (value)=>{
     isNaN(value) ? display.textContent = value : display.textContent = Number(value)
@@ -151,13 +203,5 @@ const checkInfinity = (result)=>{
         return 'Not Possible';
     }
     return result
-}
-
-
-
-    // check dot
-
-decimal.addEventListener('click', ()=>{
-   if(!a.toString().includes('.')) a+='.';
-   if(!op == '' && !b.includes('.')) b+='.'
-})
+} 
+///////////////////////////////////////////////////////////////////
