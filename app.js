@@ -1,5 +1,5 @@
 /////////// global Variables /////////////////////////////
-let a = 0;
+let a = '';
 let b = '';
 let op = '';
 let result = 0;
@@ -75,6 +75,7 @@ digits.forEach(digit=>{
     // Operation Functionality
 const insertOperator = (source)=>{
     op = source;
+    if(a.length == 0) a = 0;
     if(!b.length == 0){
      result = parseFloat(operate(a,b,select(op)).toFixed(2));
      view(checkInfinity(result));
@@ -90,7 +91,7 @@ operators.forEach(operator =>{
 
     // Equal Func
 const getResult = ()=>{
-    if(b === '' ){ // safety in case the equal is pressed before op and b are assigned
+    if(b.length == 0 ){ // safety in case the equal is pressed before op and b are assigned
         view(a)
     }else{
         result = parseFloat(operate(a,b,select(op)).toFixed(2));
@@ -106,11 +107,11 @@ equal.addEventListener('click', ()=>{
 
     // Clear Functionality
 const reset = ()=>{
-    a = 0;
+    a = '';
     b = '';
     op = '';
-    result = '';
-    view(a);
+    result = 0;
+    view(result);
 };
 clear.addEventListener('click', ()=>{
     reset();
@@ -162,11 +163,11 @@ const digitArray = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 const operatorArray = ['+', '-', '*', '/'];
 
 document.body.addEventListener('keydown', (evt)=>{
+    evt.preventDefault();
     if(digitArray.includes(evt.key)){
         insertDigit(evt.key);
     };
     if(operatorArray.includes(evt.key)){
-        evt.preventDefault();
         insertOperator(evt.key);
     };
     if(evt.key == ".") insertDot();
@@ -182,7 +183,7 @@ document.body.addEventListener('keydown', (evt)=>{
 /////////////////// Utility functions ///////////////////////////////////////////////
     // Display Functionality
 const view = (value)=>{
-    isNaN(value) ? display.textContent = value : display.textContent = Number(value)
+    display.textContent = value;
 };
 
     // Select the corresponding operator
